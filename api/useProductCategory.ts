@@ -1,14 +1,15 @@
 import { useQuery, QueryFunctionContext } from "@tanstack/react-query";
+import { BASE_URL, makeRequest } from "./baseURL";
 
-const BASE_URL: string = "./baseURL";
+interface Category {
+  category: string;
+}
 
 export const useGetAllCategories = () => {
   const query = useQuery({
     queryKey: ["products"],
     queryFn: async (context: QueryFunctionContext) => {
-      const response = await fetch(BASE_URL + "products/categories/");
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
+      return makeRequest(BASE_URL + "products/categories/", "GET", "");
     },
   });
 
@@ -17,17 +18,11 @@ export const useGetAllCategories = () => {
   };
 };
 
-interface Category {
-  category: string;
-}
-
 export const useSpecificCategory = ({ category }: Category) => {
   const query = useQuery({
     queryKey: ["products"],
     queryFn: async (context: QueryFunctionContext) => {
-      const response = await fetch(BASE_URL + `products/category/${category}`);
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
+      return makeRequest(BASE_URL + `products/category/${category}`, "GET", "");
     },
   });
 

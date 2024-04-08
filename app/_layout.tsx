@@ -14,7 +14,7 @@ const InitialLayout = () => {
     // if (!inTabsGroup) {
     // router.replace("/home");
     // } else {
-    router.replace("/login");
+    router.replace("/home");
     // }
   }, []);
 
