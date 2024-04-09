@@ -1,56 +1,25 @@
-import { Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import React from "react";
+import { Stack } from "expo-router";
 
-export const LogoutButton = () => {
+const PublicLayout = () => {
   return (
-    <Pressable
-      // onPress={doLogout}
-      style={{ marginRight: 10 }}
-    >
-      <Ionicons name="log-out-outline" size={24} color={"#fff"} />
-    </Pressable>
-  );
-};
-
-const TabsPage = () => {
-  // const { isSignedIn } = useAuth();
-
-  return (
-    <Tabs
+    <Stack
       screenOptions={{
         headerStyle: {
           backgroundColor: "#6c47ff",
         },
         headerTintColor: "#fff",
+        headerBackTitle: "Back",
       }}
     >
-      <Tabs.Screen
-        name="home"
+      <Stack.Screen
+        name="login"
         options={{
-          headerTitle: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
-          ),
-          tabBarLabel: "Home",
+          headerTitle: "Account",
         }}
-        // redirect={!isSignedIn}
-      />
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          headerTitle: "My Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
-          ),
-          tabBarLabel: "My Profile",
-          headerRight: () => <LogoutButton />,
-        }}
-        // redirect={!isSignedIn}
-      />
-    </Tabs>
+      ></Stack.Screen>
+    </Stack>
   );
 };
 
-export default TabsPage;
+export default PublicLayout;

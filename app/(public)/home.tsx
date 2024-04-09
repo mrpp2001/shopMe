@@ -1,7 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useProducts } from "@/api/useProducts";
-import { AirbnbRating, Rating } from "react-native-ratings";
 
 const Home = () => {
   const { data: ProductList } = useProducts();
@@ -13,7 +12,9 @@ const Home = () => {
         padding: 10,
         flexWrap: "wrap",
         flexDirection: "row",
-        gap: 5,
+        gap: 10,
+        height: "100%",
+        overflow: "scroll",
       }}
     >
       {ProductList?.map((product: any) => (
@@ -29,7 +30,7 @@ const Card = ({ product }: any) => {
       key={product?.id}
       style={{
         padding: 10,
-        backgroundColor: "lightgray",
+        backgroundColor: "#F9F9F9",
         borderRadius: 15,
         justifyContent: "space-between",
       }}

@@ -10,10 +10,10 @@ interface LoginResponse {
   token: string;
 }
 
-const setToken = useStore((state) => state.setToken);
+const setAuthToken = useStore((state) => state.setAuthToken);
 
 const loginUser = async ({ username, password }: LoginParams) => {
-  const response = await fetch("https://fakestoreapi.com/auth/login", {
+  const response = await fetch("https://fakestoreapi.com/auth/login/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,9 +32,11 @@ const loginUser = async ({ username, password }: LoginParams) => {
 };
 
 export const useLogin = () => {
-  return useMutation(loginUser, {
+  const mutation = useMutation({
+    mutationFn: loginUser,
     onSuccess: (data: LoginResponse) => {
-      setToken(data.token);
+      setAuthToken(data.token);
     },
   });
+  return mutation;
 };

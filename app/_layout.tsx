@@ -1,8 +1,6 @@
 import { Slot, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Home from "./(auth)/home";
-import Login from "./(public)/login";
 
 const InitialLayout = () => {
   const segments = useSegments();
@@ -14,7 +12,7 @@ const InitialLayout = () => {
     // if (!inTabsGroup) {
     // router.replace("/home");
     // } else {
-    router.replace("/home");
+    router.replace("/login");
     // }
   }, []);
 
