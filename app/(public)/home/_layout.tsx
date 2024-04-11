@@ -5,7 +5,6 @@ const StackLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="home" options={{ headerShown: false }} />
-      {/* <Stack.Screen name="cart" options={{ headerBackTitle: "Cart" }} /> */}
     </Stack>
   );
 };

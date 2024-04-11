@@ -1,6 +1,7 @@
 import { Stack, Tabs, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { Pressable, Text } from "react-native";
+import { useCart } from "@/store/authToken";
 
 export const LogoutButton = () => {
   return (
@@ -14,12 +15,29 @@ export const LogoutButton = () => {
 };
 
 export const ShoppingCart = () => {
+  const { items } = useCart();
   return (
     <Pressable
       onPress={() => router.push("/(public)/home/cart/")}
-      style={{ marginRight: 10 }}
+      style={{ marginRight: 10, position: "relative" }}
     >
       <Ionicons name="cart-outline" size={24} color={"#fff"} />
+      <Text
+        style={{
+          position: "absolute",
+          backgroundColor: "red",
+          color: "white",
+          fontWeight: "600",
+          padding: 3,
+          paddingHorizontal: 6,
+          top: -8,
+          right: -8,
+          fontSize: 10,
+          borderRadius: 25,
+        }}
+      >
+        {items?.length}
+      </Text>
     </Pressable>
   );
 };
