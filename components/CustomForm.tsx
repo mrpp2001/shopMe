@@ -22,7 +22,7 @@ export const CustomForm = ({ isNewUser, setIsNewUser }) => {
   const onSubmit = (data: FormData) => {
     userLogin(data, {
       onSuccess: () => {
-        router.replace("/home");
+        router.replace("/(public)/profile");
       },
     });
     console.log("FORM DATA: ", data);

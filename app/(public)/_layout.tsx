@@ -15,7 +15,10 @@ export const LogoutButton = () => {
 
 export const ShoppingCart = () => {
   return (
-    <Pressable onPress={() => router.push("/cart")} style={{ marginRight: 10 }}>
+    <Pressable
+      onPress={() => router.push("/(public)/home/cart/")}
+      style={{ marginRight: 10 }}
+    >
       <Ionicons name="cart-outline" size={24} color={"#fff"} />
     </Pressable>
   );
@@ -42,7 +45,6 @@ const TabsPage = () => {
             tabBarLabel: "My Profile",
             headerRight: () => <ShoppingCart />,
           }}
-          // redirect={!isSignedIn}
         />
 
         <Tabs.Screen
@@ -55,11 +57,8 @@ const TabsPage = () => {
             tabBarLabel: "My Profile",
             headerRight: () => <LogoutButton />,
           }}
-          // redirect={!isSignedIn}
         />
       </Tabs>
-
-      
     </>
   );
 };
