@@ -1,18 +1,18 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { useProducts } from "@/api/useProducts";
-import { useCart } from "@/store/authToken";
+import { useDeleteProduct, useProducts } from "@/api/useProducts";
+import { useAdmin, useCart } from "@/store/authToken";
+import { Ionicons } from "@expo/vector-icons";
 
 const Home = () => {
   const { data: ProductList } = useProducts();
-
-  const { addItem, items } = useCart();
+  const { mutate: deleteProduct, isPending, isError } = useDeleteProduct();
+  const { isAdmin } = useAdmin();
+  const { addItem } = useCart();
 
   const handleAddItem = (product: any) => {
     addItem(product);
   };
-
-  console.log("PRODUCT DATA: ", items);
 
   return (
     <View
@@ -26,19 +26,18 @@ const Home = () => {
       }}
     >
       {ProductList?.map((product: any) => (
-        <Card product={product} onPress={() => handleAddItem(product)} />
+        <Card
+          product={product}
+          onPress={() => handleAddItem(product)}
+          deleteProduct={deleteProduct}
+          isAdmin={isAdmin}
+        />
       ))}
     </View>
   );
 };
 
-export const Card = ({
-  product,
-  onPress,
-  handleAdd,
-  handleRemove,
-  isInCart = false,
-}: any) => {
+export const Card = ({ product, onPress, deleteProduct, isAdmin }: any) => {
   return (
     <View
       key={product?.id}
@@ -47,8 +46,18 @@ export const Card = ({
         backgroundColor: "#F9F9F9",
         borderRadius: 15,
         justifyContent: "space-between",
+        position: "relative",
       }}
     >
+      {isAdmin && (
+        <TouchableOpacity
+          style={{ position: "absolute", top: -10, right: -10, zIndex: 10 }}
+          onPress={() => deleteProduct(product?.id)}
+        >
+          <Ionicons name="close-circle-outline" size={35} color={"red"} />
+        </TouchableOpacity>
+      )}
+
       <View style={{ gap: 10, width: 150, justifyContent: "space-between" }}>
         <Image
           style={{ width: "100%", height: 220, borderRadius: 15 }}
@@ -79,61 +88,17 @@ export const Card = ({
           Rs {product?.price}
         </Text>
 
-        {isInCart ? (
-          <>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#6C47FF",
-                alignItems: "center",
-                padding: 8,
-                borderRadius: 25,
-              }}
-              onPress={handleAdd}
-            >
-              <Text style={{ color: "white", fontWeight: "600" }}>Add</Text>
-            </TouchableOpacity>
-
-            <Text>{product?.count}</Text>
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#6C47FF",
-                alignItems: "center",
-                padding: 8,
-                borderRadius: 25,
-              }}
-              onPress={handleRemove}
-            >
-              <Text style={{ color: "white", fontWeight: "600" }}>Remove </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#6C47FF",
-                alignItems: "center",
-                padding: 8,
-                borderRadius: 25,
-              }}
-              onPress={onPress}
-            >
-              <Text style={{ color: "white", fontWeight: "600" }}>Delete </Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#6C47FF",
-              alignItems: "center",
-              padding: 8,
-              borderRadius: 25,
-            }}
-            onPress={onPress}
-          >
-            <Text style={{ color: "white", fontWeight: "600" }}>
-              Add to cart
-            </Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#6C47FF",
+            alignItems: "center",
+            padding: 8,
+            borderRadius: 25,
+          }}
+          onPress={onPress}
+        >
+          <Text style={{ color: "white", fontWeight: "600" }}>Add to cart</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

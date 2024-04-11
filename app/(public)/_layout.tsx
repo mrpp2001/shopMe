@@ -6,7 +6,7 @@ import { useCart } from "@/store/authToken";
 export const LogoutButton = () => {
   return (
     <Pressable
-      onPress={() => router.replace("/login")}
+      onPress={() => router.replace("/(public)/home")}
       style={{ marginRight: 10 }}
     >
       <Ionicons name="log-out-outline" size={24} color={"#fff"} />

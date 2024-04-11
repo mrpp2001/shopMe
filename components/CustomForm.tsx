@@ -1,5 +1,6 @@
 import { useLogin } from "@/api/useLogin";
 import { InputField } from "@/components/GenericFormFields";
+import { useAdmin } from "@/store/authToken";
 import { Link, router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { View, StyleSheet, Button, Text, Pressable } from "react-native";
@@ -9,9 +10,9 @@ type FormData = {
   password: string;
 };
 
-export const CustomForm = ({ isNewUser, setIsNewUser }) => {
+export const CustomForm = ({ isNewUser, setIsNewUser }: any) => {
   const { mutate: userLogin } = useLogin();
-  //   const { mutate: userSignUp } = userSignUp();
+  const { validateUser } = useAdmin();
 
   const {
     control,
@@ -20,9 +21,13 @@ export const CustomForm = ({ isNewUser, setIsNewUser }) => {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
+    const { username, password } = data;
+
+    validateUser(username, password);
+
     userLogin(data, {
       onSuccess: () => {
-        router.replace("/(public)/profile");
+        router.replace("/(public)/home");
       },
     });
     console.log("FORM DATA: ", data);
@@ -57,14 +62,14 @@ export const CustomForm = ({ isNewUser, setIsNewUser }) => {
         color={"#6c47ff"}
       ></Button>
 
-      <Pressable
+      {/* <Pressable
         style={styles.button}
         onPress={() => setIsNewUser((prev: boolean) => !prev)}
       >
         <Text style={{ fontWeight: "600" }}>
           {isNewUser ? "Create Account" : "Login"}
         </Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 };

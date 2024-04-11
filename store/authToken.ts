@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { create } from "zustand";
 
 interface State {
@@ -12,12 +13,38 @@ interface Item {
   id: number;
 }
 
+interface AdminUser {
+  username: string;
+  password: string;
+}
+
 interface CartState {
   items: Item[];
   addItem: (item: Item) => void;
   removeItem: (item: Item) => void;
   updateItem: (oldItem: Item, newItem: Item) => void;
 }
+
+type Admin = {
+  admin: AdminUser;
+  isAdmin: boolean;
+  validateUser: (username: string, password: string) => void;
+};
+
+export const useAdmin = create<Admin>((set) => ({
+  admin: {
+    username: "johnd",
+    password: "m38rmF$",
+  },
+  isAdmin: false,
+  validateUser: (username: string, password: string) => {
+    if (username === "johnd" && password === "m38rmF$") {
+      set({ isAdmin: true });
+    } else {
+      set({ isAdmin: false });
+    }
+  },
+}));
 
 export const useStore = create<State>((set) => ({
   authToken: "",

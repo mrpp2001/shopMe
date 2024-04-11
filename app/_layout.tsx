@@ -7,12 +7,7 @@ const InitialLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // const inTabsGroup = segments[0] === "(auth)";
-    // if (!inTabsGroup) {
-    // router.replace("/home");
-    // } else {
     router.replace("/(public)/home");
-    // }
   }, []);
 
   return <Slot />;
