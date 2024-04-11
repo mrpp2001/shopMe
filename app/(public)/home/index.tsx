@@ -1,38 +1,120 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useDeleteProduct, useProducts } from "@/api/useProducts";
 import { useAdmin, useCart } from "@/store/authToken";
 import { Ionicons } from "@expo/vector-icons";
+import {
+  useGetAllCategories,
+  useSpecificCategory,
+} from "@/api/useProductCategory";
 
 const Home = () => {
-  const { data: ProductList } = useProducts();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const { data: productList } = useProducts();
+  const { data: categoryList } = useGetAllCategories();
+  const { data: specificCategoryProductList } = useSpecificCategory({
+    category: selectedCategory,
+  });
   const { mutate: deleteProduct, isPending, isError } = useDeleteProduct();
   const { isAdmin } = useAdmin();
   const { addItem } = useCart();
+  const [isSorted, setIsSorted] = useState(false);
 
   const handleAddItem = (product: any) => {
     addItem(product);
   };
 
+  const sortedProductList = isSorted
+    ? [...productList].sort((a, b) => a.title.localeCompare(b.title))
+    : productList;
+
+  const displayProductList = selectedCategory
+    ? specificCategoryProductList
+    : sortedProductList;
+
+  console.log("displayProductList: ", displayProductList);
+
+  const handleCategorySelect = (category: any) => {
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(category);
+    }
+  };
+
   return (
-    <View
-      style={{
-        padding: 10,
-        flexWrap: "wrap",
-        flexDirection: "row",
-        gap: 10,
-        height: "100%",
-        overflow: "scroll",
-      }}
-    >
-      {ProductList?.map((product: any) => (
-        <Card
-          product={product}
-          onPress={() => handleAddItem(product)}
-          deleteProduct={deleteProduct}
-          isAdmin={isAdmin}
-        />
-      ))}
+    <View style={{ height: "100%", overflow: "scroll" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          paddingHorizontal: 10,
+          justifyContent: "space-between",
+          marginVertical: 5,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 10,
+            overflow: "scroll",
+            width: "90%",
+          }}
+        >
+          {categoryList?.map((category: any) => (
+            <TouchableOpacity
+              key={category}
+              style={{
+                padding: 5,
+                paddingHorizontal: 12,
+                borderRadius: 25,
+                backgroundColor:
+                  selectedCategory === category ? "blue" : "white",
+              }}
+              onPress={() => handleCategorySelect(category)}
+            >
+              <Text
+                style={{
+                  textTransform: "capitalize",
+                  fontWeight: "600",
+                  color: selectedCategory === category ? "white" : "black",
+                }}
+              >
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <TouchableOpacity
+          style={{
+            padding: 5,
+            borderRadius: 25,
+            backgroundColor: "white",
+          }}
+          onPress={() => setIsSorted(!isSorted)}
+        >
+          <Ionicons name="funnel-outline" size={22} color={"gray"} />
+        </TouchableOpacity>
+      </View>
+
+      <View
+        style={{
+          padding: 10,
+          flexWrap: "wrap",
+          flexDirection: "row",
+          gap: 10,
+          height: "100%",
+          overflow: "scroll",
+        }}
+      >
+        {displayProductList?.map((product: any) => (
+          <Card
+            product={product}
+            onPress={() => handleAddItem(product)}
+            deleteProduct={deleteProduct}
+            isAdmin={isAdmin}
+          />
+        ))}
+      </View>
     </View>
   );
 };

@@ -7,7 +7,7 @@ interface Category {
 
 export const useGetAllCategories = () => {
   const query = useQuery({
-    queryKey: ["products"],
+    queryKey: ["category"],
     queryFn: async (context: QueryFunctionContext) => {
       return makeRequest(BASE_URL + "products/categories/", "GET", "");
     },
@@ -20,8 +20,8 @@ export const useGetAllCategories = () => {
 
 export const useSpecificCategory = ({ category }: Category) => {
   const query = useQuery({
-    queryKey: ["products"],
-    queryFn: async (context: QueryFunctionContext) => {
+    queryKey: [category],
+    queryFn: async () => {
       return makeRequest(BASE_URL + `products/category/${category}`, "GET", "");
     },
   });
