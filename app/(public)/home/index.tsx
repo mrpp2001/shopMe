@@ -1,4 +1,10 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { useDeleteProduct, useProducts } from "@/api/useProducts";
 import { useAdmin, useCart } from "@/store/authToken";
@@ -10,12 +16,32 @@ import {
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { data: productList } = useProducts();
-  const { data: categoryList } = useGetAllCategories();
-  const { data: specificCategoryProductList } = useSpecificCategory({
+  const {
+    data: productList,
+    isPending: isPendingProductList,
+    isError: isErrorProductList,
+  } = useProducts();
+
+  const {
+    data: categoryList,
+    isPending: isPendingCategoryList,
+    isError: isErrorCategoryList,
+  } = useGetAllCategories();
+
+  const {
+    data: selectedCategoryProductList,
+    isPending: isPendingSelectedCategoryProductList,
+    isError: isErrorSelectedCategoryProductList,
+  } = useSpecificCategory({
     category: selectedCategory,
   });
-  const { mutate: deleteProduct, isPending, isError } = useDeleteProduct();
+
+  const {
+    mutate: deleteProduct,
+    isPending: isPendingDeleteProduct,
+    isError: isErrorDeleteProduct,
+  } = useDeleteProduct();
+
   const { isAdmin } = useAdmin();
   const { addItem } = useCart();
   const [isSorted, setIsSorted] = useState(false);
@@ -29,10 +55,8 @@ const Home = () => {
     : productList;
 
   const displayProductList = selectedCategory
-    ? specificCategoryProductList
+    ? selectedCategoryProductList
     : sortedProductList;
-
-  console.log("displayProductList: ", displayProductList);
 
   const handleCategorySelect = (category: any) => {
     if (selectedCategory === category) {
@@ -44,57 +68,28 @@ const Home = () => {
 
   return (
     <View style={{ height: "100%", overflow: "scroll" }}>
-      <View
-        style={{
-          flexDirection: "row",
-          paddingHorizontal: 10,
-          justifyContent: "space-between",
-          marginVertical: 5,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 10,
-            overflow: "scroll",
-            width: "90%",
-          }}
-        >
-          {categoryList?.map((category: any) => (
-            <TouchableOpacity
-              key={category}
-              style={{
-                padding: 5,
-                paddingHorizontal: 12,
-                borderRadius: 25,
-                backgroundColor:
-                  selectedCategory === category ? "blue" : "white",
-              }}
-              onPress={() => handleCategorySelect(category)}
-            >
-              <Text
-                style={{
-                  textTransform: "capitalize",
-                  fontWeight: "600",
-                  color: selectedCategory === category ? "white" : "black",
-                }}
-              >
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <TouchableOpacity
-          style={{
-            padding: 5,
-            borderRadius: 25,
-            backgroundColor: "white",
-          }}
-          onPress={() => setIsSorted(!isSorted)}
-        >
-          <Ionicons name="funnel-outline" size={22} color={"gray"} />
-        </TouchableOpacity>
-      </View>
+      {isPendingCategoryList && (
+        <ActivityIndicator size="small" color="#0000ff" />
+      )}
+
+      {isErrorCategoryList && (
+        <ErrorMessage message={"Error while fetching categories"} />
+      )}
+
+      <Filter
+        categoryList={categoryList}
+        selectedCategory={selectedCategory}
+        handleCategorySelect={handleCategorySelect}
+        setIsSorted={setIsSorted}
+      />
+
+      {isPendingProductList && isPendingSelectedCategoryProductList && (
+        <ActivityIndicator size="small" color="#0000ff" />
+      )}
+
+      {isErrorProductList && isErrorSelectedCategoryProductList && (
+        <ErrorMessage message={"Error while fetching products"} />
+      )}
 
       <View
         style={{
@@ -119,7 +114,83 @@ const Home = () => {
   );
 };
 
-export const Card = ({ product, onPress, deleteProduct, isAdmin }: any) => {
+const ErrorMessage = ({ message }: { message: string }) => {
+  return (
+    <Text
+      style={{
+        color: "red",
+        fontSize: 12,
+        fontWeight: "600",
+        alignSelf: "center",
+        marginVertical: 5,
+      }}
+    >
+      {message}
+    </Text>
+  );
+};
+
+const Filter = ({
+  categoryList,
+  selectedCategory,
+  handleCategorySelect,
+  setIsSorted,
+}: any) => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        paddingHorizontal: 10,
+        justifyContent: "space-between",
+        marginVertical: 5,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
+          overflow: "scroll",
+          width: "90%",
+        }}
+      >
+        {categoryList?.map((category: any) => (
+          <TouchableOpacity
+            key={category}
+            style={{
+              padding: 5,
+              paddingHorizontal: 12,
+              borderRadius: 25,
+              backgroundColor: selectedCategory === category ? "blue" : "white",
+            }}
+            onPress={() => handleCategorySelect(category)}
+          >
+            <Text
+              style={{
+                textTransform: "capitalize",
+                fontWeight: "600",
+                color: selectedCategory === category ? "white" : "black",
+              }}
+            >
+              {category}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <TouchableOpacity
+        style={{
+          padding: 5,
+          borderRadius: 25,
+          backgroundColor: "white",
+        }}
+        onPress={() => setIsSorted((prev: boolean) => !prev)}
+      >
+        <Ionicons name="funnel-outline" size={22} color={"gray"} />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const Card = ({ product, onPress, deleteProduct, isAdmin }: any) => {
   return (
     <View
       key={product?.id}
