@@ -1,4 +1,12 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { UpdateForm } from "@/components/UpdateForm";
 import { useAdmin, useUser } from "@/store/authToken";
@@ -26,6 +34,8 @@ const profile = () => {
   const { username } = useUser();
   const [currentUser, setCurrentUser] = useState<UserData>();
   const [selectedUser, setSelectedUser] = useState<UserData>();
+  const [modalVisible, setModalVisible] = useState(false);
+
   const { isAdmin } = useAdmin();
 
   useEffect(() => {
@@ -52,71 +62,112 @@ const profile = () => {
       {!isAdmin && currentUser && <UpdateForm currentUser={currentUser} />}
 
       {isAdmin && (
-        <View style={{ margin: 15, gap: 8 }}>
-          {userList?.map((user: any) => {
-            return (
-              <View
-                key={user?.id}
-                style={{
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+        <UserCard
+          userList={userList}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      )}
+    </View>
+  );
+};
+
+const UserCard = ({
+  userList,
+  setSelectedUser,
+  selectedUser,
+  modalVisible,
+  setModalVisible,
+}: any) => {
+  return (
+    <View style={{ margin: 15, gap: 8 }}>
+      {userList?.map((user: any) => {
+        return (
+          <View
+            key={user?.id}
+            style={{
+              borderWidth: 1,
+              padding: 10,
+              borderRadius: 10,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <View>
+              <Text>
+                User: <Text style={styles.boldText}>{user?.username}</Text>
+              </Text>
+              <Text>
+                Name:{" "}
+                <Text style={styles.boldText}>
+                  {user?.name?.firstname} {user?.name?.lastname}
+                </Text>
+              </Text>
+              <Text>
+                Email: <Text style={styles.boldText}>{user?.email}</Text>
+              </Text>
+              <Text>
+                Phone: <Text style={styles.boldText}>{user?.phone}</Text>
+              </Text>
+            </View>
+
+            <View
+              style={{
+                justifyContent: "space-between",
+                gap: 15,
+                flexDirection: "row",
+                marginLeft: 10,
+              }}
+            >
+              <TouchableOpacity
+                style={{ ...styles.button }}
+                onPress={() => {
+                  setModalVisible(true);
+                  setSelectedUser([
+                    {
+                      email: user?.email,
+                      username: user?.username,
+                      password: user?.password,
+                      phone: user?.phone,
+                      name: user?.name,
+                    },
+                  ]);
                 }}
               >
-                <View>
-                  <Text>
-                    User: <Text style={styles.boldText}>{user?.username}</Text>
-                  </Text>
-                  <Text>
-                    Name:{" "}
-                    <Text style={styles.boldText}>
-                      {user?.name?.firstname} {user?.name?.lastname}
-                    </Text>
-                  </Text>
-                  <Text>
-                    Email: <Text style={styles.boldText}>{user?.email}</Text>
-                  </Text>
-                  <Text>
-                    Phone: <Text style={styles.boldText}>{user?.phone}</Text>
-                  </Text>
-                </View>
+                <Ionicons name="create-outline" size={32} color={"green"} />
+              </TouchableOpacity>
+              <TouchableOpacity style={{ ...styles.button }}>
+                <Ionicons name="trash-outline" size={32} color={"red"} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        );
+      })}
 
-                <View
-                  style={{
-                    justifyContent: "space-between",
-                    gap: 15,
-                    flexDirection: "row",
-                    marginLeft: 10,
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{ ...styles.button }}
-                    onPress={() =>
-                      setSelectedUser([
-                        {
-                          email: user?.email,
-                          username: user?.username,
-                          password: user?.password,
-                          phone: user?.phone,
-                          name: user?.name,
-                        },
-                      ])
-                    }
-                  >
-                    <Ionicons name="create-outline" size={32} color={"green"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ ...styles.button }}>
-                    <Ionicons name="trash-outline" size={32} color={"red"} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            );
-          })}
+      <Modal animationType="slide" transparent={false} visible={modalVisible}>
+        <View style={{ margin: 15 }}>
+          <TouchableHighlight
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <Ionicons name="arrow-back-outline" size={32} color={"black"} />
+          </TouchableHighlight>
+
+          <Text
+            style={{ alignSelf: "center", fontSize: 20, fontWeight: "600" }}
+          >
+            Update User Details
+          </Text>
+
+          <View>
+            {selectedUser && <UpdateForm currentUser={selectedUser} />}
+          </View>
         </View>
-      )}
+      </Modal>
     </View>
   );
 };
