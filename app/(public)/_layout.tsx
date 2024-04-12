@@ -1,7 +1,7 @@
 import { Tabs, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text } from "react-native";
-import { useCart, useUser } from "@/store/authToken";
+import { useAdmin, useCart, useUser } from "@/store/authToken";
 
 export const LogoutButton = () => {
   const { logout } = useUser();
@@ -48,6 +48,7 @@ export const ShoppingCart = () => {
 };
 
 const TabsPage = () => {
+  const { isAdmin } = useAdmin();
   return (
     <>
       <Tabs
@@ -73,11 +74,11 @@ const TabsPage = () => {
         <Tabs.Screen
           name="profile"
           options={{
-            headerTitle: "My Profile",
+            headerTitle: isAdmin ? "Users" : "My Profile",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person-outline" size={size} color={color} />
             ),
-            tabBarLabel: "My Profile",
+            tabBarLabel: isAdmin ? "Users" : "My Profile",
             headerRight: () => <LogoutButton />,
           }}
         />

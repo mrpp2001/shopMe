@@ -19,19 +19,7 @@ type FormData = {
   phone: string;
 };
 
-type UserData = {
-  email: string;
-  username: string;
-  password: string;
-  phone: string;
-  name: object;
-};
-
-export const UpdateForm = () => {
-  const { data: userList } = useUsers();
-  const { username, logout } = useUser();
-  const [currentUser, setCurrentUser] = useState();
-
+export const UpdateForm = ({ currentUser }: any) => {
   const {
     control,
     handleSubmit,
@@ -40,38 +28,12 @@ export const UpdateForm = () => {
   } = useForm<FormData>();
 
   useEffect(() => {
-    const findUser = userList
-      ?.filter((user: any) => user.username === username)
-      .map((user: UserData) => ({
-        email: user?.email,
-        username: user?.username,
-        password: user?.password,
-        phone: user?.phone,
-        name: user?.name,
-      }));
-
-    setCurrentUser(findUser[0]);
-  }, [username]);
-
-  const findUser = userList
-    ?.filter((user: any) => user.username === username)
-    .map((user: UserData) => ({
-      email: user?.email,
-      username: user?.username,
-      password: user?.password,
-      phone: user?.phone,
-      name: user?.name,
-    }));
-
-  console.log("USER: ", findUser);
-
-  useEffect(() => {
-    setValue("firstname", currentUser?.name?.firstname);
-    setValue("lastname", currentUser?.name?.lastname);
-    setValue("email", currentUser?.email);
-    setValue("phone", currentUser?.phone);
-    setValue("username", currentUser?.username);
-    setValue("password", currentUser?.password);
+    setValue("firstname", currentUser[0]?.name?.firstname);
+    setValue("lastname", currentUser[0]?.name?.lastname);
+    setValue("email", currentUser[0]?.email);
+    setValue("phone", currentUser[0]?.phone);
+    setValue("username", currentUser[0]?.username);
+    setValue("password", currentUser[0]?.password);
   }, []);
 
   return (
