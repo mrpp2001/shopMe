@@ -31,6 +31,12 @@ type Admin = {
   validateUser: (username: string, password: string) => void;
 };
 
+type UserStore = {
+  username: string | null;
+  login: (username: string) => void;
+  logout: () => void;
+};
+
 export const useAdmin = create<Admin>((set) => ({
   admin: {
     username: "johnd",
@@ -43,6 +49,17 @@ export const useAdmin = create<Admin>((set) => ({
     } else {
       set({ isAdmin: false });
     }
+  },
+}));
+
+export const useUser = create<UserStore>((set) => ({
+  username: null,
+  login: (username: string) => {
+    set({ username });
+  },
+
+  logout: () => {
+    set({ username: null });
   },
 }));
 

@@ -1,13 +1,13 @@
 import { StyleSheet } from "react-native";
 import React, { useState } from "react";
-import { CustomForm } from "@/components/CustomForm";
+import { UpdateForm } from "@/components/UpdateForm";
 
 const profile = () => {
   fetch("https://fakestoreapi.com/users")
     .then((res) => res.json())
     .then((json) => console.log(json));
 
-  return <CustomForm />;
+  return <UpdateForm />;
 };
 
 export default profile;

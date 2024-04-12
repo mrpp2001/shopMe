@@ -6,6 +6,7 @@ export const InputField = ({
   name,
   rules,
   defaultValue = "",
+  style,
   ...props
 }: any) => {
   const { field } = useController({
@@ -20,7 +21,7 @@ export const InputField = ({
       {...props}
       onChangeText={field.onChange}
       value={field.value}
-      style={styles.inputField}
+      style={[styles.inputField, style]}
     />
   );
 };

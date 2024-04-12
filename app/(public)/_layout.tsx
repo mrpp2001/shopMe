@@ -1,12 +1,17 @@
-import { Stack, Tabs, router } from "expo-router";
+import { Tabs, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text } from "react-native";
-import { useCart } from "@/store/authToken";
+import { useCart, useUser } from "@/store/authToken";
 
 export const LogoutButton = () => {
+  const { logout } = useUser();
+
   return (
     <Pressable
-      onPress={() => router.replace("/(public)/home")}
+      onPress={() => {
+        logout();
+        router.replace("/");
+      }}
       style={{ marginRight: 10 }}
     >
       <Ionicons name="log-out-outline" size={24} color={"#fff"} />

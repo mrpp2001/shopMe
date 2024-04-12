@@ -1,36 +1,45 @@
 import { useLogin } from "@/api/useLogin";
 import { InputField } from "@/components/GenericFormFields";
-import { useAdmin } from "@/store/authToken";
-import { Link, router } from "expo-router";
+import { useAdmin, useUser } from "@/store/authToken";
+import { router } from "expo-router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { View, StyleSheet, Button, Text, Pressable } from "react-native";
+import { View, StyleSheet, Button, Text } from "react-native";
 
-type FormData = {
+// johnd
+// m38rmF$
+
+// david_r
+// 3478*#54
+
+type LoginData = {
   username: string;
   password: string;
 };
 
-export const CustomForm = ({ isNewUser, setIsNewUser }: any) => {
+export const CustomForm = () => {
   const { mutate: userLogin } = useLogin();
   const { validateUser } = useAdmin();
+  const { login } = useUser();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<LoginData>();
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: LoginData) => {
     const { username, password } = data;
 
     validateUser(username, password);
+    login(username);
 
     userLogin(data, {
       onSuccess: () => {
         router.replace("/(public)/home");
       },
     });
-    console.log("FORM DATA: ", data);
+    console.log("FORM DATA: ", username);
   };
 
   return (
@@ -58,18 +67,9 @@ export const CustomForm = ({ isNewUser, setIsNewUser }: any) => {
 
       <Button
         onPress={handleSubmit(onSubmit)}
-        title={isNewUser ? "Login" : "Create Account"}
+        title={"Login"}
         color={"#6c47ff"}
       ></Button>
-
-      {/* <Pressable
-        style={styles.button}
-        onPress={() => setIsNewUser((prev: boolean) => !prev)}
-      >
-        <Text style={{ fontWeight: "600" }}>
-          {isNewUser ? "Create Account" : "Login"}
-        </Text>
-      </Pressable> */}
     </View>
   );
 };
