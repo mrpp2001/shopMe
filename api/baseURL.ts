@@ -17,7 +17,6 @@ export const makeRequest = async (
     });
 
     if (!response.ok) throw new Error(`Error: ${response.status}`);
-    if (response.status === 204) return "Successful";
 
     const responseData = await response.json();
     return responseData;

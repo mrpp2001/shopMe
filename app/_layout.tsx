@@ -7,7 +7,7 @@ const InitialLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/(public)/profile");
+    router.replace("/");
   }, []);
 
   return <Slot />;
@@ -23,11 +23,3 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-
-// const StackLayout =()=>{
-//   return(
-//     <Stack>
-//       <Stack.Screen name="Home" component={RootLayout} />
-//     </Stack>
-//   )
-// }

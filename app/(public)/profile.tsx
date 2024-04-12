@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { UpdateForm } from "@/components/UpdateForm";
 import { useAdmin, useUser } from "@/store/authToken";
-import { useUsers } from "@/api/useUsers";
+import { useDeleteUser, useUsers } from "@/api/useUsers";
 import { Ionicons } from "@expo/vector-icons";
 
 // johnd
@@ -76,6 +76,7 @@ const UserCard = ({
   modalVisible,
   setModalVisible,
 }: any) => {
+  const { mutate: deleteUser } = useDeleteUser();
   return (
     <View style={{ margin: 15, gap: 8 }}>
       {userList?.map((user: any) => {
@@ -126,7 +127,10 @@ const UserCard = ({
               >
                 <Ionicons name="create-outline" size={32} color={"green"} />
               </TouchableOpacity>
-              <TouchableOpacity style={{ ...styles.button }}>
+              <TouchableOpacity
+                style={{ ...styles.button }}
+                onPress={() => deleteUser(user?.id)}
+              >
                 <Ionicons name="trash-outline" size={32} color={"red"} />
               </TouchableOpacity>
             </View>

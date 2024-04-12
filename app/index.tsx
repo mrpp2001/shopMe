@@ -41,6 +41,17 @@ const index = ({ isNewUser, setIsNewUser }: any) => {
 
   return (
     <View style={styles.container}>
+      <Text
+        style={{
+          alignSelf: "center",
+          fontWeight: "700",
+          fontSize: 20,
+          marginVertical: 10,
+        }}
+      >
+        Login to ShopMe :)
+      </Text>
+
       <InputField
         control={control}
         name="username"

@@ -43,3 +43,18 @@ export const useUpdateUser = () => {
 
   return mutation;
 };
+
+export const useDeleteUser = () => {
+  const deleteUser: MutationFunction<any, Product> = async ({
+    id,
+  }: Product) => {
+    return makeRequest(BASE_URL + "users/" + id, "DELETE");
+  };
+
+  const mutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {},
+  });
+
+  return mutation;
+};
