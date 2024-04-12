@@ -1,40 +1,87 @@
 import { useLogin } from "@/api/useLogin";
-import { useUsers } from "@/api/useUsers";
+import { useUpdateUser, useUsers } from "@/api/useUsers";
 import { InputField } from "@/components/GenericFormFields";
 import { useAdmin, useUser } from "@/store/authToken";
 import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { View, StyleSheet, Button, Text } from "react-native";
+import { View, StyleSheet, Button, Text, Alert } from "react-native";
+
+// johnd
+// m38rmF$
 
 // david_r
 // 3478*#54
 
-type FormData = {
-  username: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
+type Address = {
+  city: string;
+  number: string;
+  street: string;
+  zipcode: string;
+  geolocation: {
+    lat: string;
+    long: string;
+  };
 };
 
+type FormData = {
+  name: {
+    firstname: string;
+    lastname: string;
+  };
+  username: string;
+  password: string;
+  email: string;
+  phone: string;
+  address: Address;
+};
 export const UpdateForm = ({ currentUser }: any) => {
+  const { mutate: updateUser } = useUpdateUser();
+
+  console.log("WHOLE USER: ", currentUser);
+
   const {
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>();
 
   useEffect(() => {
-    setValue("firstname", currentUser[0]?.name?.firstname);
-    setValue("lastname", currentUser[0]?.name?.lastname);
-    setValue("email", currentUser[0]?.email);
-    setValue("phone", currentUser[0]?.phone);
-    setValue("username", currentUser[0]?.username);
-    setValue("password", currentUser[0]?.password);
+    setValue("name.firstname", currentUser?.name?.firstname);
+    setValue("name.lastname", currentUser?.name?.lastname);
+    setValue("email", currentUser?.email);
+    setValue("phone", currentUser?.phone);
+    setValue("username", currentUser?.username);
+    setValue("password", currentUser?.password);
+
+    setValue("address.city", currentUser?.address?.city);
+    setValue("address.number", currentUser?.address?.number);
+    setValue("address.street", currentUser?.address?.street);
+    setValue("address.zipcode", currentUser?.address?.zipcode);
+    setValue("address.geolocation", currentUser?.address?.geolocation);
+    setValue("address.geolocation.lat", currentUser?.address?.geolocation?.lat);
+    setValue(
+      "address.geolocation.long",
+      currentUser?.address?.geolocation?.long
+    );
   }, []);
+
+  const onSubmit = (data: FormData) => {
+    console.log("UPDATE DATA:", data);
+    const id = currentUser?.id;
+    console.log("ID: ", id);
+
+    updateUser(
+      { id: id, data: data },
+      {
+        onSuccess: () => {
+          Alert.alert("Successfully Updated User Details");
+        },
+      }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -47,27 +94,27 @@ export const UpdateForm = ({ currentUser }: any) => {
       >
         <InputField
           control={control}
-          name="firstname"
+          name="name.firstname"
           placeholder="Enter Name"
           rules={{ required: true }}
           style={{
             width: "48%",
           }}
         />
-        {errors.firstname && (
+        {errors?.name?.firstname && (
           <Text style={{ ...styles.errorMessage }}>Firstname is required.</Text>
         )}
 
         <InputField
           control={control}
-          name="lastname"
+          name="name.lastname"
           placeholder="Enter lastname"
           rules={{ required: true }}
           style={{
             width: "48%",
           }}
         />
-        {errors.lastname && (
+        {errors?.name?.lastname && (
           <Text style={{ ...styles.errorMessage }}>Lastname is required.</Text>
         )}
       </View>
@@ -118,7 +165,7 @@ export const UpdateForm = ({ currentUser }: any) => {
       )}
 
       <Button
-        // onPress={handleSubmit(onSubmit)}
+        onPress={handleSubmit(onSubmit)}
         title={"Update Account"}
         color={"#6c47ff"}
       ></Button>

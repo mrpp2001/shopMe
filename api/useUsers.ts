@@ -1,6 +1,14 @@
-import { useQuery, QueryFunctionContext } from "@tanstack/react-query";
+import {
+  useQuery,
+  QueryFunctionContext,
+  useQueryClient,
+  MutationFunction,
+  useMutation,
+} from "@tanstack/react-query";
 import { BASE_URL, makeRequest } from "./baseURL";
 import { useStore } from "@/store/authToken";
+
+const USER_QUERY_KEY = "user";
 
 interface Product {
   id: string;
@@ -18,4 +26,20 @@ export const useUsers = () => {
   return {
     ...query,
   };
+};
+
+export const useUpdateUser = () => {
+  const updateUser: MutationFunction<any, Product> = async ({
+    id,
+    data,
+  }: Product) => {
+    return makeRequest(BASE_URL + "users/" + id, "PUT", data);
+  };
+
+  const mutation = useMutation({
+    mutationFn: updateUser,
+    onSuccess: () => {},
+  });
+
+  return mutation;
 };

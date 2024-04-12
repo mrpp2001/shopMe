@@ -39,16 +39,11 @@ const profile = () => {
   const { isAdmin } = useAdmin();
 
   useEffect(() => {
-    const findUser = userList
-      ?.filter((user: any) => user.username === username)
-      .map((user: UserData) => ({
-        email: user?.email,
-        username: user?.username,
-        password: user?.password,
-        phone: user?.phone,
-        name: user?.name,
-      }));
-    setCurrentUser(findUser);
+    const findUser = userList?.filter(
+      (user: any) => user.username === username
+    );
+    console.log("FIND USER: ", findUser);
+    findUser && setCurrentUser(findUser[0]);
   }, [username]);
 
   useEffect(() => {
@@ -126,15 +121,7 @@ const UserCard = ({
                 style={{ ...styles.button }}
                 onPress={() => {
                   setModalVisible(true);
-                  setSelectedUser([
-                    {
-                      email: user?.email,
-                      username: user?.username,
-                      password: user?.password,
-                      phone: user?.phone,
-                      name: user?.name,
-                    },
-                  ]);
+                  setSelectedUser(user);
                 }}
               >
                 <Ionicons name="create-outline" size={32} color={"green"} />
