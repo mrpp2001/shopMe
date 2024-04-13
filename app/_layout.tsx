@@ -7,7 +7,7 @@ const InitialLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/");
+    router.replace("/(public)/home/");
   }, []);
 
   return <Slot />;

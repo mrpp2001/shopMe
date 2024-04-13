@@ -13,6 +13,7 @@ import {
   useGetAllCategories,
   useSpecificCategory,
 } from "@/api/useProductCategory";
+import { CartComponent, DraggableItem } from "@/components/DraggableItem";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -66,6 +67,10 @@ const Home = () => {
     }
   };
 
+  const [cartVisible, setCartVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
+  const cartPosition = { x: 50, y: 50, width: 100, height: 100 };
+
   return (
     <View style={{ height: "100%", overflow: "scroll" }}>
       {isPendingCategoryList && (
@@ -99,16 +104,29 @@ const Home = () => {
           gap: 10,
           height: "100%",
           overflow: "scroll",
+          position: "relative",
         }}
       >
-        {displayProductList?.map((product: any) => (
+        {/* {displayProductList?.map((product: any) => (
           <Card
             product={product}
             onPress={() => handleAddItem(product)}
             deleteProduct={deleteProduct}
             isAdmin={isAdmin}
           />
+        ))} */}
+
+        {displayProductList?.map((product, index) => (
+          <DraggableItem
+            item={product}
+            index={index}
+            cartPosition={cartPosition}
+            setCartVisible={setCartVisible}
+            setCurrentItem={setCurrentItem}
+          />
         ))}
+
+        {cartVisible && <CartComponent currentItem={currentItem} />}
       </View>
     </View>
   );
