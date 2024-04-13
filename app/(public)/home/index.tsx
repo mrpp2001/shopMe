@@ -79,7 +79,13 @@ const Home = () => {
   };
 
   return (
-    <View style={{ height: "100%", overflow: "scroll", position: "relative" }}>
+    <View
+      style={{
+        height: "100%",
+        overflow: "scroll",
+        position: "relative",
+      }}
+    >
       {isPendingCategoryList && (
         <ActivityIndicator size="small" color="#0000ff" />
       )}
@@ -138,7 +144,7 @@ const Home = () => {
   );
 };
 
-export const ErrorMessage = ({ message, style }: { message: string }) => {
+export const ErrorMessage = ({ message, style }: any) => {
   return (
     <Text
       style={{

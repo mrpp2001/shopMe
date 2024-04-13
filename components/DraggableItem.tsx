@@ -9,8 +9,9 @@ export const DraggableItem = ({
   children,
 }) => {
   const { addItem } = useCart();
-  const [startPosition, setStartPosition] = useState(null);
   const pan = useState(new Animated.ValueXY())[0];
+  const initialPos = useState(new Animated.ValueXY())[0];
+  const [isFirstDrag, setIsFirstDrag] = useState(true);
 
   const isDropArea = (gesture) => {
     return (
@@ -26,8 +27,11 @@ export const DraggableItem = ({
         x: pan.x._value,
         y: pan.y._value,
       });
-      // Store the initial position when the drag starts
-      setStartPosition({ x: pan.x._value, y: pan.y._value });
+      // Store the initial position when the drag starts for the first time
+      if (isFirstDrag) {
+        initialPos.setValue({ x: pan.x._value, y: pan.y._value });
+        setIsFirstDrag(false);
+      }
       // Make the cart visible
       setIsSmallCartVisible(true);
     },
@@ -46,7 +50,7 @@ export const DraggableItem = ({
     onPanResponderRelease: (e, gesture) => {
       // Return the item to its original position
       Animated.spring(pan, {
-        toValue: startPosition,
+        toValue: initialPos,
         useNativeDriver: false,
       }).start();
       pan.flattenOffset();

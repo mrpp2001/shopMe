@@ -74,12 +74,10 @@ export const useCart = create<CartState>((set) => ({
     set((state) => {
       const existingItemIndex = state.items.findIndex((i) => i.id === item.id);
       if (existingItemIndex >= 0) {
-        // If item exists, increase the count
-        const newItems = [...state.items];
-        newItems[existingItemIndex].count += 1;
-        return { items: newItems };
+        // If item exists, do nothing
+        return state;
       } else {
-        // If item does not exist, add it to the cart
+        // If item does not exist, add it to the cart with count 1
         return { items: [...state.items, { ...item, count: 1 }] };
       }
     }),
