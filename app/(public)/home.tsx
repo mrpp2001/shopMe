@@ -1,13 +1,14 @@
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   ActivityIndicator,
+  Dimensions,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import { useDeleteProduct, useProducts } from "@/api/useProducts";
-import { useAdmin, useCart } from "@/store/authToken";
+import { useProducts } from "@/api/useProducts";
+import { useCart } from "@/store/authToken";
 import { Ionicons } from "@expo/vector-icons";
 import {
   useGetAllCategories,
@@ -62,7 +63,7 @@ const Home = () => {
     }
   };
   // Drag Product
-  const screenHeight = window.innerHeight;
+  const screenHeight = Dimensions.get("window").height; // Use Dimensions API for React Native
   const cartHeight = 0.25 * screenHeight; // Cart height is 25% of the screen height
   const cartPosition = {
     x: 50,
@@ -108,33 +109,29 @@ const Home = () => {
       {isErrorProductList && isErrorSelectedCategoryProductList && (
         <ErrorMessage message={"Error while fetching products"} />
       )}
-
-      <View
-        style={{
-          padding: 10,
-          flexWrap: "wrap",
-          flexDirection: "row",
-          gap: 10,
-          height: "100%",
-          overflow: "scroll",
-          position: "relative",
-        }}
-      >
-        {displayProductList?.map((product) => (
-          <DraggableItem
-            item={product}
-            cartPosition={cartPosition}
-            setIsSmallCartVisible={setIsSmallCartVisible}
-          >
-            <ProductCard
-              product={product}
-              onPress={() => {
-                handleAddItem(product);
-                setIsSmallCartVisible(true);
-              }}
-            />
-          </DraggableItem>
-        ))}
+      <View style={{ justifyContent: "space-between", alignItems: "center" }}>
+        <FlatList
+          numColumns={2}
+          data={displayProductList}
+          keyExtractor={(item) => item.id.toString()} // assuming each product has a unique id
+          renderItem={({ item: product }) => (
+            <View style={{ justifyContent: "space-between", marginRight: 15 }}>
+              <DraggableItem
+                item={product}
+                cartPosition={cartPosition}
+                setIsSmallCartVisible={setIsSmallCartVisible}
+              >
+                <ProductCard
+                  product={product}
+                  onPress={() => {
+                    handleAddItem(product);
+                    setIsSmallCartVisible(true);
+                  }}
+                />
+              </DraggableItem>
+            </View>
+          )}
+        />
       </View>
 
       <SmallCart isSmallCartVisible={isSmallCartVisible} onClose={onModalClose}>
@@ -174,24 +171,21 @@ const Filter = ({
         paddingHorizontal: 10,
         justifyContent: "space-between",
         marginVertical: 5,
+        alignItems: "center",
       }}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          gap: 10,
-          overflow: "scroll",
-          width: "90%",
-        }}
-      >
-        {categoryList?.map((category: any) => (
+      <FlatList
+        horizontal
+        data={categoryList}
+        keyExtractor={(item) => item}
+        renderItem={({ item: category }) => (
           <TouchableOpacity
-            key={category}
             style={{
               padding: 5,
               paddingHorizontal: 12,
               borderRadius: 25,
               backgroundColor: selectedCategory === category ? "blue" : "white",
+              marginRight: 10,
             }}
             onPress={() => handleCategorySelect(category)}
           >
@@ -205,8 +199,8 @@ const Filter = ({
               {category}
             </Text>
           </TouchableOpacity>
-        ))}
-      </View>
+        )}
+      />
       <TouchableOpacity
         style={{
           padding: 5,

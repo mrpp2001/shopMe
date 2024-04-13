@@ -2,7 +2,6 @@ import { useLogin } from "@/api/useLogin";
 import { InputField } from "@/components/GenericFormFields";
 import { useAdmin, useUser } from "@/store/authToken";
 import { router } from "expo-router";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { View, StyleSheet, Button, Text } from "react-native";
 

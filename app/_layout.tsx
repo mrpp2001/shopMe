@@ -1,13 +1,12 @@
-import { Slot, Stack, useRouter, useSegments } from "expo-router";
+import { Slot, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const InitialLayout = () => {
-  const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/(public)/home/");
+    router.replace("/(public)/home");
   }, []);
 
   return <Slot />;
