@@ -78,7 +78,7 @@ const TabsPage = () => {
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home-outline" size={size} color={color} />
             ),
-            tabBarLabel: "My Profile",
+            tabBarLabel: "Home",
             headerRight: () => <ShoppingCart />,
           }}
         />

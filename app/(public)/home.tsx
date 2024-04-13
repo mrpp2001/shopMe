@@ -63,7 +63,7 @@ const Home = () => {
     }
   };
   // Drag Product
-  const screenHeight = Dimensions.get("window").height; // Use Dimensions API for React Native
+  const screenHeight = Dimensions.get("window").height;
   const cartHeight = 0.25 * screenHeight; // Cart height is 25% of the screen height
   const cartPosition = {
     x: 50,
@@ -109,30 +109,29 @@ const Home = () => {
       {isErrorProductList && isErrorSelectedCategoryProductList && (
         <ErrorMessage message={"Error while fetching products"} />
       )}
-      <View style={{ justifyContent: "space-between", alignItems: "center" }}>
-        <FlatList
-          numColumns={2}
-          data={displayProductList}
-          keyExtractor={(item) => item.id.toString()} // assuming each product has a unique id
-          renderItem={({ item: product }) => (
-            <View style={{ justifyContent: "space-between", marginRight: 15 }}>
-              <DraggableItem
-                item={product}
-                cartPosition={cartPosition}
-                setIsSmallCartVisible={setIsSmallCartVisible}
-              >
-                <ProductCard
-                  product={product}
-                  onPress={() => {
-                    handleAddItem(product);
-                    setIsSmallCartVisible(true);
-                  }}
-                />
-              </DraggableItem>
-            </View>
-          )}
-        />
-      </View>
+
+      <FlatList
+        numColumns={2}
+        data={displayProductList}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item: product }) => (
+          <View style={{ justifyContent: "center", marginHorizontal: 5 }}>
+            <DraggableItem
+              item={product}
+              cartPosition={cartPosition}
+              setIsSmallCartVisible={setIsSmallCartVisible}
+            >
+              <ProductCard
+                product={product}
+                onPress={() => {
+                  handleAddItem(product);
+                  setIsSmallCartVisible(true);
+                }}
+              />
+            </DraggableItem>
+          </View>
+        )}
+      />
 
       <SmallCart isSmallCartVisible={isSmallCartVisible} onClose={onModalClose}>
         <SmallCartProductCard />
@@ -170,7 +169,7 @@ const Filter = ({
         flexDirection: "row",
         paddingHorizontal: 10,
         justifyContent: "space-between",
-        marginVertical: 5,
+        marginVertical: 15,
         alignItems: "center",
       }}
     >
