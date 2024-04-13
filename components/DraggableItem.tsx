@@ -5,7 +5,6 @@ import { Text, TouchableOpacity, PanResponder, Animated } from "react-native";
 export const DraggableItem = ({
   item,
   cartPosition,
-  setCurrentItem,
   setIsSmallCartVisible,
   children,
 }) => {
@@ -31,7 +30,6 @@ export const DraggableItem = ({
       setStartPosition({ x: pan.x._value, y: pan.y._value });
       // Make the cart visible
       setIsSmallCartVisible(true);
-      setCurrentItem(item);
     },
     onPanResponderMove: (e, gesture) => {
       Animated.event([null, { dx: pan.x, dy: pan.y }], {

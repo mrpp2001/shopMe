@@ -13,7 +13,7 @@ import {
   useGetAllCategories,
   useSpecificCategory,
 } from "@/api/useProductCategory";
-import { CartComponent, DraggableItem } from "@/components/DraggableItem";
+import { DraggableItem } from "@/components/DraggableItem";
 import SmallCart from "@/components/SmallCart";
 import { ProductCard, SmallCartProductCard } from "@/components/ProductCard";
 
@@ -39,13 +39,6 @@ const Home = () => {
     category: selectedCategory,
   });
 
-  const {
-    mutate: deleteProduct,
-    isPending: isPendingDeleteProduct,
-    isError: isErrorDeleteProduct,
-  } = useDeleteProduct();
-
-  const { isAdmin } = useAdmin();
   const { addItem } = useCart();
   const [isSorted, setIsSorted] = useState(false);
 
@@ -69,8 +62,6 @@ const Home = () => {
     }
   };
   // Drag Product
-
-  const [currentItem, setCurrentItem] = useState(null);
   const screenHeight = window.innerHeight;
   const cartHeight = 0.25 * screenHeight; // Cart height is 25% of the screen height
   const cartPosition = {
@@ -82,10 +73,6 @@ const Home = () => {
 
   //Small Cart
   const [isSmallCartVisible, setIsSmallCartVisible] = useState(false);
-
-  const addProduct = () => {
-    setIsSmallCartVisible(true);
-  };
 
   const onModalClose = () => {
     setIsSmallCartVisible(false);
@@ -131,12 +118,14 @@ const Home = () => {
           <DraggableItem
             item={product}
             cartPosition={cartPosition}
-            setCurrentItem={setCurrentItem}
             setIsSmallCartVisible={setIsSmallCartVisible}
           >
             <ProductCard
               product={product}
-              onPress={() => handleAddItem(product)}
+              onPress={() => {
+                handleAddItem(product);
+                setIsSmallCartVisible(true);
+              }}
             />
           </DraggableItem>
         ))}
@@ -149,7 +138,7 @@ const Home = () => {
   );
 };
 
-const ErrorMessage = ({ message }: { message: string }) => {
+export const ErrorMessage = ({ message, style }: { message: string }) => {
   return (
     <Text
       style={{
@@ -158,6 +147,7 @@ const ErrorMessage = ({ message }: { message: string }) => {
         fontWeight: "600",
         alignSelf: "center",
         marginVertical: 5,
+        ...style,
       }}
     >
       {message}

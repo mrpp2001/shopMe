@@ -1,3 +1,4 @@
+import { ErrorMessage } from "@/app/(public)/home";
 import { useCart } from "@/store/authToken";
 import { Ionicons } from "@expo/vector-icons";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -77,6 +78,13 @@ export const SmallCartProductCard = () => {
         overflow: "scroll",
       }}
     >
+      {items?.length <= 0 && (
+        <ErrorMessage
+          message="Your cart is empty. Please drag product"
+          style={{ color: "black", fontSize: 16, margin: 25, marginTop: 38 }}
+        />
+      )}
+
       {items?.map((product: any) => {
         return (
           <View

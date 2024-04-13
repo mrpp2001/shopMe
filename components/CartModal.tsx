@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { useCart } from "@/store/authToken";
 import { Ionicons } from "@expo/vector-icons";
+import { ErrorMessage } from "@/app/(public)/home";
 
 export const CartModal = ({ isCartVisible, setIsCartVisible }) => {
   const { items } = useCart();
@@ -40,6 +41,10 @@ export const CartModal = ({ isCartVisible, setIsCartVisible }) => {
 
           <Text style={{ fontSize: 18, fontWeight: "600" }}>Shopping Cart</Text>
         </View>
+
+        {items?.length <= 0 && (
+          <ErrorMessage message="Your cart is empty. Please add product" />
+        )}
 
         {items?.map((product: any) => {
           const handleAdd = () => {
