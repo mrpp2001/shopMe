@@ -14,8 +14,8 @@ import {
   useSpecificCategory,
 } from "@/api/useProductCategory";
 import { CartComponent, DraggableItem } from "@/components/DraggableItem";
-import { ProductCard } from "@/components/Card";
 import SmallCart from "@/components/SmallCart";
+import { ProductCard } from "@/components/ProductCard";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -127,22 +127,18 @@ const Home = () => {
           position: "relative",
         }}
       >
-        {/* {displayProductList?.map((product: any) => (
-          <ProductCard
-            product={product}
-            onPress={() => handleAddItem(product)}
-            deleteProduct={deleteProduct}
-            isAdmin={isAdmin}
-          />
-        ))} */}
-
         {displayProductList?.map((product) => (
           <DraggableItem
             item={product}
             cartPosition={cartPosition}
             setCurrentItem={setCurrentItem}
             setIsSmallCartVisible={setIsSmallCartVisible}
-          />
+          >
+            <ProductCard
+              product={product}
+              onPress={() => handleAddItem(product)}
+            />
+          </DraggableItem>
         ))}
 
         {isCartVisible && <CartComponent currentItem={currentItem} />}
