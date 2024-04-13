@@ -14,6 +14,8 @@ import {
   useSpecificCategory,
 } from "@/api/useProductCategory";
 import { CartComponent, DraggableItem } from "@/components/DraggableItem";
+import { ProductCard } from "@/components/Card";
+import SmallCart from "@/components/SmallCart";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -66,13 +68,31 @@ const Home = () => {
       setSelectedCategory(category);
     }
   };
-
-  const [cartVisible, setCartVisible] = useState(false);
+  // Drag Product
+  const [isCartVisible, setIsCartVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
-  const cartPosition = { x: 50, y: 50, width: 100, height: 100 };
+  const screenHeight = window.innerHeight;
+  const cartHeight = 0.25 * screenHeight; // Cart height is 25% of the screen height
+  const cartPosition = {
+    x: 50,
+    y: screenHeight - cartHeight, // Position the cart 25% up from the bottom
+    width: 100,
+    height: cartHeight, // The height of the cart is 25% of the screen height
+  };
+
+  //Small Cart
+  const [isSmallCartVisible, setIsSmallCartVisible] = useState(false);
+
+  const addProduct = () => {
+    setIsSmallCartVisible(true);
+  };
+
+  const onModalClose = () => {
+    setIsSmallCartVisible(false);
+  };
 
   return (
-    <View style={{ height: "100%", overflow: "scroll" }}>
+    <View style={{ height: "100%", overflow: "scroll", position: "relative" }}>
       {isPendingCategoryList && (
         <ActivityIndicator size="small" color="#0000ff" />
       )}
@@ -108,7 +128,7 @@ const Home = () => {
         }}
       >
         {/* {displayProductList?.map((product: any) => (
-          <Card
+          <ProductCard
             product={product}
             onPress={() => handleAddItem(product)}
             deleteProduct={deleteProduct}
@@ -116,18 +136,21 @@ const Home = () => {
           />
         ))} */}
 
-        {displayProductList?.map((product, index) => (
+        {displayProductList?.map((product) => (
           <DraggableItem
             item={product}
-            index={index}
             cartPosition={cartPosition}
-            setCartVisible={setCartVisible}
             setCurrentItem={setCurrentItem}
+            setIsSmallCartVisible={setIsSmallCartVisible}
           />
         ))}
 
-        {cartVisible && <CartComponent currentItem={currentItem} />}
+        {isCartVisible && <CartComponent currentItem={currentItem} />}
       </View>
+
+      <SmallCart isVisible={isSmallCartVisible} onClose={onModalClose}>
+        <Text>Hello</Text>
+      </SmallCart>
     </View>
   );
 };
@@ -204,73 +227,6 @@ const Filter = ({
       >
         <Ionicons name="funnel-outline" size={22} color={"gray"} />
       </TouchableOpacity>
-    </View>
-  );
-};
-
-const Card = ({ product, onPress, deleteProduct, isAdmin }: any) => {
-  return (
-    <View
-      key={product?.id}
-      style={{
-        padding: 10,
-        backgroundColor: "#F9F9F9",
-        borderRadius: 15,
-        justifyContent: "space-between",
-        position: "relative",
-      }}
-    >
-      {isAdmin && (
-        <TouchableOpacity
-          style={{ position: "absolute", top: -10, right: -10, zIndex: 10 }}
-          onPress={() => deleteProduct(product?.id)}
-        >
-          <Ionicons name="close-circle-outline" size={35} color={"red"} />
-        </TouchableOpacity>
-      )}
-
-      <View style={{ gap: 10, width: 150, justifyContent: "space-between" }}>
-        <Image
-          style={{ width: "100%", height: 220, borderRadius: 15 }}
-          source={{ uri: product?.image }}
-        />
-
-        <View style={{ gap: 5 }}>
-          <Text style={{ fontWeight: "600", fontSize: 14 }}>
-            {product?.title}
-          </Text>
-          <Text style={{ fontSize: 12 }} numberOfLines={3} ellipsizeMode="tail">
-            {product?.description}
-          </Text>
-        </View>
-      </View>
-
-      <View>
-        <Text
-          style={{
-            alignSelf: "flex-end",
-            padding: 5,
-            paddingHorizontal: 10,
-            borderRadius: 25,
-            fontWeight: "700",
-            fontSize: 16,
-          }}
-        >
-          Rs {product?.price}
-        </Text>
-
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#6C47FF",
-            alignItems: "center",
-            padding: 8,
-            borderRadius: 25,
-          }}
-          onPress={onPress}
-        >
-          <Text style={{ color: "white", fontWeight: "600" }}>Add to cart</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };

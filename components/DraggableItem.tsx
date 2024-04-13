@@ -1,18 +1,11 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  PanResponder,
-  Animated,
-} from "react-native";
+import { Text, TouchableOpacity, PanResponder, Animated } from "react-native";
 
 export const DraggableItem = ({
   item,
-  index,
   cartPosition,
-  setCartVisible,
   setCurrentItem,
+  setIsSmallCartVisible,
 }) => {
   const [startPosition, setStartPosition] = useState(null);
   const pan = useState(new Animated.ValueXY())[0];
@@ -34,7 +27,7 @@ export const DraggableItem = ({
       // Store the initial position when the drag starts
       setStartPosition({ x: pan.x._value, y: pan.y._value });
       // Make the cart visible
-      setCartVisible(true);
+      setIsSmallCartVisible(true);
       setCurrentItem(item);
     },
     onPanResponderMove: (e, gesture) => {
@@ -49,10 +42,6 @@ export const DraggableItem = ({
       }
     },
     onPanResponderRelease: (e, gesture) => {
-      //   if (!isDropArea(gesture)) {
-      //     // Hide the cart
-      //     setCartVisible(false);
-      //   }
       // Return the item to its original position
       Animated.spring(pan, {
         toValue: startPosition,
@@ -75,26 +64,5 @@ export const DraggableItem = ({
         <Text>{item.id}</Text>
       </TouchableOpacity>
     </Animated.View>
-  );
-};
-
-export const CartComponent = ({ currentItem }) => {
-  const handlePressIn = () => {
-    if (currentItem) {
-      console.log(`Item in cart: ${currentItem.id}`);
-    }
-  };
-
-  return (
-    <TouchableOpacity
-      onPressIn={handlePressIn}
-      style={{ position: "absolute", right: 0, top: 0 }}
-    >
-      <View>
-        <Text style={{ backgroundColor: "red", color: "white", padding: 10 }}>
-          Hello
-        </Text>
-      </View>
-    </TouchableOpacity>
   );
 };
