@@ -10,21 +10,37 @@ import React from "react";
 import { useCart } from "@/store/authToken";
 import { Ionicons } from "@expo/vector-icons";
 
-export const CartModal = ({ isVisible }) => {
+export const CartModal = ({ isCartVisible, setIsCartVisible }) => {
   const { items } = useCart();
   const updateItem = useCart((state) => state.updateItem);
   const removeItem = useCart((state) => state.removeItem);
 
   return (
-    <Modal animationType="slide" transparent={true} visible={isVisible}>
+    <Modal animationType="slide" transparent={true} visible={isCartVisible}>
       <View
         style={{
           padding: 10,
           gap: 10,
           height: "100%",
           overflow: "scroll",
+          backgroundColor: "white",
         }}
       >
+        <View
+          style={{
+            marginVertical: 15,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <TouchableOpacity onPress={() => setIsCartVisible(false)}>
+            <Ionicons name="arrow-back-outline" size={24} color={"black"} />
+          </TouchableOpacity>
+
+          <Text style={{ fontSize: 18, fontWeight: "600" }}>Shopping Cart</Text>
+        </View>
+
         {items?.map((product: any) => {
           const handleAdd = () => {
             const newItem = { ...product, count: product.count + 1 };
@@ -44,14 +60,12 @@ export const CartModal = ({ isVisible }) => {
             removeItem(product);
           };
           return (
-            <>
-              <CartCard
-                product={product}
-                handleAdd={handleAdd}
-                handleRemove={handleRemove}
-                handleDelete={() => handleDelete(product)}
-              />
-            </>
+            <CartCard
+              product={product}
+              handleAdd={handleAdd}
+              handleRemove={handleRemove}
+              handleDelete={() => handleDelete(product)}
+            />
           );
         })}
       </View>

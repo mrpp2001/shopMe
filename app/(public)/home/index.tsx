@@ -15,7 +15,7 @@ import {
 } from "@/api/useProductCategory";
 import { CartComponent, DraggableItem } from "@/components/DraggableItem";
 import SmallCart from "@/components/SmallCart";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductCard, SmallCartProductCard } from "@/components/ProductCard";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -69,7 +69,7 @@ const Home = () => {
     }
   };
   // Drag Product
-  const [isCartVisible, setIsCartVisible] = useState(false);
+
   const [currentItem, setCurrentItem] = useState(null);
   const screenHeight = window.innerHeight;
   const cartHeight = 0.25 * screenHeight; // Cart height is 25% of the screen height
@@ -140,12 +140,10 @@ const Home = () => {
             />
           </DraggableItem>
         ))}
-
-        {isCartVisible && <CartComponent currentItem={currentItem} />}
       </View>
 
-      <SmallCart isVisible={isSmallCartVisible} onClose={onModalClose}>
-        <Text>Hello</Text>
+      <SmallCart isSmallCartVisible={isSmallCartVisible} onClose={onModalClose}>
+        <SmallCartProductCard />
       </SmallCart>
     </View>
   );

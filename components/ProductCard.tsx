@@ -1,3 +1,5 @@
+import { useCart } from "@/store/authToken";
+import { Ionicons } from "@expo/vector-icons";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 export const ProductCard = ({ product, onPress }: any) => {
@@ -54,6 +56,56 @@ export const ProductCard = ({ product, onPress }: any) => {
           <Text style={{ color: "white", fontWeight: "600" }}>Add to cart</Text>
         </TouchableOpacity>
       </View>
+    </View>
+  );
+};
+
+export const SmallCartProductCard = () => {
+  const { items, removeItem } = useCart();
+
+  const handleRemove = (product: any) => {
+    removeItem(product);
+  };
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        margin: 10,
+        gap: 15,
+        width: "95%",
+        overflow: "scroll",
+      }}
+    >
+      {items?.map((product: any) => {
+        return (
+          <View
+            key={product?.id}
+            style={{
+              padding: 5,
+              position: "relative",
+              marginVertical: 15,
+              marginTop: 38,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                top: -16,
+                right: -16,
+              }}
+              onPress={() => handleRemove(product)}
+            >
+              <Ionicons name="close-circle-outline" size={30} color={"red"} />
+            </TouchableOpacity>
+
+            <Image
+              style={{ width: 40, height: 50, borderRadius: 15 }}
+              source={{ uri: product?.image }}
+            />
+          </View>
+        );
+      })}
     </View>
   );
 };

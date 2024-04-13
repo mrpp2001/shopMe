@@ -2,6 +2,8 @@ import { Tabs, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text } from "react-native";
 import { useAdmin, useCart, useUser } from "@/store/authToken";
+import { useState } from "react";
+import { CartModal } from "@/components/CartModal";
 
 export const LogoutButton = () => {
   const { logout } = useUser();
@@ -21,29 +23,39 @@ export const LogoutButton = () => {
 
 export const ShoppingCart = () => {
   const { items } = useCart();
+  const [isCartVisible, setIsCartVisible] = useState(false);
   return (
-    <Pressable
-      onPress={() => router.push("/(public)/home/cart/")}
-      style={{ marginRight: 10, position: "relative" }}
-    >
-      <Ionicons name="cart-outline" size={24} color={"#fff"} />
-      <Text
-        style={{
-          position: "absolute",
-          backgroundColor: "red",
-          color: "white",
-          fontWeight: "600",
-          padding: 3,
-          paddingHorizontal: 6,
-          top: -8,
-          right: -8,
-          fontSize: 10,
-          borderRadius: 25,
-        }}
+    <>
+      <Pressable
+        onPress={() => setIsCartVisible(true)}
+        style={{ marginRight: 10, position: "relative" }}
       >
-        {items?.length}
-      </Text>
-    </Pressable>
+        <Ionicons name="cart-outline" size={24} color={"#fff"} />
+        <Text
+          style={{
+            position: "absolute",
+            backgroundColor: "red",
+            color: "white",
+            fontWeight: "600",
+            padding: 3,
+            paddingHorizontal: 6,
+            top: -8,
+            right: -8,
+            fontSize: 10,
+            borderRadius: 25,
+          }}
+        >
+          {items?.length}
+        </Text>
+      </Pressable>
+
+      {isCartVisible && (
+        <CartModal
+          isCartVisible={isCartVisible}
+          setIsCartVisible={setIsCartVisible}
+        />
+      )}
+    </>
   );
 };
 
