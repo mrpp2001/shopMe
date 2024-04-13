@@ -44,7 +44,6 @@ export const UpdateForm = ({ currentUser }: any) => {
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -55,17 +54,6 @@ export const UpdateForm = ({ currentUser }: any) => {
     setValue("phone", currentUser?.phone);
     setValue("username", currentUser?.username);
     setValue("password", currentUser?.password);
-
-    setValue("address.city", currentUser?.address?.city);
-    setValue("address.number", currentUser?.address?.number);
-    setValue("address.street", currentUser?.address?.street);
-    setValue("address.zipcode", currentUser?.address?.zipcode);
-    setValue("address.geolocation", currentUser?.address?.geolocation);
-    setValue("address.geolocation.lat", currentUser?.address?.geolocation?.lat);
-    setValue(
-      "address.geolocation.long",
-      currentUser?.address?.geolocation?.long
-    );
   }, []);
 
   const onSubmit = (data: FormData) => {
@@ -74,7 +62,7 @@ export const UpdateForm = ({ currentUser }: any) => {
     console.log("ID: ", id);
 
     updateUser(
-      { id: id, data: data },
+      { id: id, data: { ...currentUser, ...data } },
       {
         onSuccess: () => {
           Alert.alert("Successfully Updated User Details");

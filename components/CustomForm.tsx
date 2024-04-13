@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { View, StyleSheet, Button, Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // johnd
 // m38rmF$
@@ -18,8 +19,8 @@ type LoginData = {
 };
 
 export const CustomForm = () => {
-  const { mutate: userLogin } = useLogin();
-  const { validateUser } = useAdmin();
+  const { mutate: LogUser } = useLogin();
+  const { validateUser, isAdmin } = useAdmin();
   const { login } = useUser();
 
   const {
@@ -28,18 +29,55 @@ export const CustomForm = () => {
     formState: { errors },
   } = useForm<LoginData>();
 
-  const onSubmit = (data: LoginData) => {
+  // Set function
+  const storeData = async (key: string, value: any) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue);
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
+  };
+
+  // Get function
+  const getData = async (key: string) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(key);
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+  };
+
+  const getAdmin = async () => {
+    const isAdmin = await getData("isAdmin");
+    console.log("GET ADMIN: ", isAdmin);
+  };
+
+  const getLoged = async () => {
+    const isLoged = await getData("isLoged");
+    console.log("GET LOGED: ", isLoged);
+  };
+
+  const onSubmit = async (data: LoginData) => {
     const { username, password } = data;
 
     validateUser(username, password);
     login(username);
 
-    userLogin(data, {
-      onSuccess: () => {
+    LogUser(data, {
+      onSuccess: async () => {
         router.replace("/(public)/home");
+        await storeData("isAdmin", isAdmin);
+        await storeData("isLoged", true);
       },
     });
+
     console.log("FORM DATA: ", username);
+    await getAdmin();
+    await getLoged();
   };
 
   return (

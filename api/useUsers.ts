@@ -33,7 +33,7 @@ export const useUpdateUser = () => {
     id,
     data,
   }: Product) => {
-    return makeRequest(BASE_URL + "users/" + id, "PUT", data);
+    return makeRequest(BASE_URL + "users/" + id, "PUT", "hello", data);
   };
 
   const mutation = useMutation({

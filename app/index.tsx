@@ -5,6 +5,9 @@ import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { View, StyleSheet, Button, Text } from "react-native";
 
+// johnd
+// m38rmF$
+
 // david_r
 // 3478*#54
 
@@ -17,6 +20,8 @@ const index = ({ isNewUser, setIsNewUser }: any) => {
   const { mutate: userLogin } = useLogin();
   const { validateUser } = useAdmin();
   const { login } = useUser();
+
+  // router.replace("/");
 
   const {
     control,
