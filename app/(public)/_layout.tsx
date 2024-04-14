@@ -7,10 +7,12 @@ import { CartModal } from "@/components/CartModal";
 
 export const LogoutButton = () => {
   const { logout } = useUser();
+  const { clearItems } = useCart();
 
   return (
     <Pressable
       onPress={() => {
+        clearItems();
         logout();
         router.replace("/");
       }}
