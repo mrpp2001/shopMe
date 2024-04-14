@@ -30,3 +30,29 @@ export const makeRequest = async (
     }
   }
 };
+
+export const makeDeleteRequest = async (
+  url: string,
+  token: string
+): Promise<any> => {
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+
+    if (!response.ok) throw new Error(`Error: ${response.status}`);
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
+  }
+};

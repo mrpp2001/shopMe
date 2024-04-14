@@ -1,6 +1,6 @@
 import { useLogin } from "@/api/useLogin";
 import { InputField } from "@/components/GenericFormFields";
-import { useAdmin, useUser } from "@/store/authToken";
+import { useAdmin, useUser } from "@/store/store";
 import { router } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ type LoginData = {
   password: string;
 };
 
-export const CustomForm = () => {
+export const LoginForm = () => {
   const { mutate: LogUser } = useLogin();
   const { validateUser, isAdmin } = useAdmin();
   const { login } = useUser();

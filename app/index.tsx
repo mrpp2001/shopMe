@@ -1,9 +1,11 @@
 import { useLogin } from "@/api/useLogin";
 import { InputField } from "@/components/GenericFormFields";
-import { useAdmin, useUser } from "@/store/authToken";
+import { ToastMessage, showToast } from "@/components/ToastMessage";
+import { useAdmin, useUser } from "@/store/store";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { View, StyleSheet, Button, Text } from "react-native";
+import Toast from "react-native-toast-message";
 
 // johnd
 // m38rmF$
@@ -16,12 +18,10 @@ type LoginData = {
   password: string;
 };
 
-const index = ({ isNewUser, setIsNewUser }: any) => {
+const index = () => {
   const { mutate: userLogin } = useLogin();
   const { validateUser } = useAdmin();
   const { login } = useUser();
-
-  // router.replace("/");
 
   const {
     control,
@@ -38,13 +38,17 @@ const index = ({ isNewUser, setIsNewUser }: any) => {
       onSuccess: () => {
         login(username);
         router.replace("/(public)/home");
+        showToast({
+          title: "Success",
+          message: "You have successfully logged in 👋",
+        });
       },
     });
-    console.log("FORM DATA: ", data);
   };
 
   return (
     <View style={styles.container}>
+      <ToastMessage />
       <Text
         style={{
           alignSelf: "center",

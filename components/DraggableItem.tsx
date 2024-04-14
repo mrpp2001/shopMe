@@ -1,4 +1,4 @@
-import { useCart } from "@/store/authToken";
+import { useCart } from "@/store/store";
 import React, { Children, useState } from "react";
 import { Text, TouchableOpacity, PanResponder, Animated } from "react-native";
 

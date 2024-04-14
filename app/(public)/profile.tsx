@@ -8,15 +8,11 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { UpdateForm } from "@/components/UpdateForm";
-import { useAdmin, useUser } from "@/store/authToken";
+import { useAdmin, useUser } from "@/store/store";
 import { useDeleteUser, useUsers } from "@/api/useUsers";
 import { Ionicons } from "@expo/vector-icons";
-
-// johnd
-// m38rmF$
-
-// david_r
-// 3478*#54
+import { ToastMessage, showToast } from "@/components/ToastMessage";
+import { ConfirmationModal } from "@/components/ConfirmationModal";
 
 type UserData = [
   {
@@ -41,7 +37,6 @@ const profile = () => {
     const findUser = userList?.filter(
       (user: any) => user.username === username
     );
-    console.log("FIND USER: ", findUser);
     findUser && setCurrentUser(findUser[0]);
   }, [username]);
 
@@ -54,6 +49,8 @@ const profile = () => {
   return (
     <View style={{ height: "100%", overflow: "scroll" }}>
       {!isAdmin && currentUser && <UpdateForm currentUser={currentUser} />}
+
+      <ToastMessage />
 
       {isAdmin && (
         <UserCard
@@ -76,6 +73,19 @@ const UserCard = ({
   setModalVisible,
 }: any) => {
   const { mutate: deleteUser } = useDeleteUser();
+  const [isConfirmed, setIsConfirmed] = useState(false);
+
+  const handleDelete = (userId: any) => {
+    deleteUser(userId, {
+      onSuccess: () => {
+        setIsConfirmed(false);
+        showToast({
+          title: "Success",
+          message: "User deleted successfully.",
+        });
+      },
+    });
+  };
   return (
     <View style={{ margin: 15, gap: 8 }}>
       {userList?.map((user: any) => {
@@ -126,12 +136,24 @@ const UserCard = ({
               >
                 <Ionicons name="create-outline" size={32} color={"green"} />
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={{ ...styles.button }}
-                onPress={() => deleteUser(user?.id)}
+                onPress={() => setIsConfirmed(true)}
               >
                 <Ionicons name="trash-outline" size={32} color={"red"} />
               </TouchableOpacity>
+
+              <ConfirmationModal
+                isConfirmed={isConfirmed}
+                setIsConfirmed={setIsConfirmed}
+                message={
+                  "Are you sure you want to delete this item? This action cannot be undone."
+                }
+                ButtonName={"Delete"}
+                onPress={() => handleDelete(user?.id)}
+                style={{ backgroundColor: "red" }}
+              />
             </View>
           </View>
         );

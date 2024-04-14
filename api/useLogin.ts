@@ -1,5 +1,6 @@
-import { useStore } from "@/store/authToken";
-import { useMutation } from "@tanstack/react-query";
+import { useStore } from "@/store/store";
+import { MutationFunction, useMutation } from "@tanstack/react-query";
+import { BASE_URL, makeRequest } from "./baseURL";
 
 interface LoginParams {
   username: string;
@@ -12,31 +13,23 @@ interface LoginResponse {
 
 const setAuthToken = useStore((state) => state.setAuthToken);
 
-const loginUser = async ({ username, password }: LoginParams) => {
-  const response = await fetch("https://fakestoreapi.com/auth/login/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+export const useLogin = () => {
+  const loginUser: MutationFunction<any, LoginParams> = async ({
+    username,
+    password,
+  }) => {
+    return makeRequest(BASE_URL + "auth/login/", "POST", "", {
       username,
       password,
-    }),
-  });
+    });
+  };
 
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  return response.json();
-};
-
-export const useLogin = () => {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data: LoginResponse) => {
       setAuthToken(data.token);
     },
   });
+
   return mutation;
 };

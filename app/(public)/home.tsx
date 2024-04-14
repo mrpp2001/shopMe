@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useProducts } from "@/api/useProducts";
-import { useCart } from "@/store/authToken";
+import { useCart } from "@/store/store";
 import { Ionicons } from "@expo/vector-icons";
 import {
   useGetAllCategories,

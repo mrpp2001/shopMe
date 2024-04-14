@@ -1,5 +1,5 @@
 import { ErrorMessage } from "@/app/(public)/home";
-import { useCart } from "@/store/authToken";
+import { useCart } from "@/store/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 

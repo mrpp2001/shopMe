@@ -1,7 +1,7 @@
 import { Tabs, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text } from "react-native";
-import { useAdmin, useCart, useUser } from "@/store/authToken";
+import { useAdmin, useCart, useUser } from "@/store/store";
 import { useState } from "react";
 import { CartModal } from "@/components/CartModal";
 

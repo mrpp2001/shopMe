@@ -1,11 +1,10 @@
-import { useLogin } from "@/api/useLogin";
-import { useUpdateUser, useUsers } from "@/api/useUsers";
+import { useUpdateUser } from "@/api/useUsers";
 import { InputField } from "@/components/GenericFormFields";
-import { useAdmin, useUser } from "@/store/authToken";
-import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { View, StyleSheet, Button, Text, Alert } from "react-native";
+import { View, StyleSheet, Button, Text } from "react-native";
+import { ToastMessage, showToast } from "./ToastMessage";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 // johnd
 // m38rmF$
@@ -35,10 +34,10 @@ type FormData = {
   phone: string;
   address: Address;
 };
+
 export const UpdateForm = ({ currentUser }: any) => {
   const { mutate: updateUser } = useUpdateUser();
-
-  console.log("WHOLE USER: ", currentUser);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const {
     control,
@@ -57,7 +56,6 @@ export const UpdateForm = ({ currentUser }: any) => {
   }, []);
 
   const onSubmit = (data: FormData) => {
-    console.log("UPDATE DATA:", data);
     const id = currentUser?.id;
     console.log("ID: ", id);
 
@@ -65,7 +63,11 @@ export const UpdateForm = ({ currentUser }: any) => {
       { id: id, data: { ...currentUser, ...data } },
       {
         onSuccess: () => {
-          Alert.alert("Successfully Updated User Details");
+          setIsConfirmed(false);
+          showToast({
+            title: "Success",
+            message: "User details updated successfully!",
+          });
         },
       }
     );
@@ -73,6 +75,8 @@ export const UpdateForm = ({ currentUser }: any) => {
 
   return (
     <View style={styles.container}>
+      <ToastMessage />
+
       <View
         style={{
           flexDirection: "row",
@@ -153,17 +157,27 @@ export const UpdateForm = ({ currentUser }: any) => {
       )}
 
       <Button
-        onPress={handleSubmit(onSubmit)}
+        onPress={() => setIsConfirmed(true)}
         title={"Update Account"}
         color={"#6c47ff"}
       ></Button>
+
+      <ConfirmationModal
+        isConfirmed={isConfirmed}
+        setIsConfirmed={setIsConfirmed}
+        message={
+          "Are you sure you want to update this item? Any unsaved changes will be lost."
+        }
+        ButtonName={"Update"}
+        onPress={handleSubmit(onSubmit)}
+        style={{ backgroundColor: "green" }}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     padding: 20,
     gap: 3,

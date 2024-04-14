@@ -5,8 +5,8 @@ import {
   MutationFunction,
   useMutation,
 } from "@tanstack/react-query";
-import { BASE_URL, makeRequest } from "./baseURL";
-import { useStore } from "@/store/authToken";
+import { BASE_URL, makeDeleteRequest, makeRequest } from "./baseURL";
+import { useStore } from "@/store/store";
 
 const USER_QUERY_KEY = "user";
 
@@ -16,10 +16,11 @@ interface Product {
 }
 
 export const useUsers = () => {
+  const authToken = useStore((state) => state.authToken);
   const query = useQuery({
-    queryKey: ["user"],
+    queryKey: [USER_QUERY_KEY],
     queryFn: async (context: QueryFunctionContext) => {
-      return makeRequest(BASE_URL + "users/", "GET", "");
+      return makeRequest(BASE_URL + "users/", "GET", authToken, "");
     },
   });
 
@@ -29,31 +30,42 @@ export const useUsers = () => {
 };
 
 export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  const authToken = useStore((state) => state.authToken);
   const updateUser: MutationFunction<any, Product> = async ({
     id,
     data,
   }: Product) => {
-    return makeRequest(BASE_URL + "users/" + id, "PUT", "hello", data);
+    return makeRequest(BASE_URL + "users/" + id, "PUT", authToken, data);
   };
 
   const mutation = useMutation({
     mutationFn: updateUser,
-    onSuccess: () => {},
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY],
+      });
+    },
   });
 
   return mutation;
 };
 
 export const useDeleteUser = () => {
-  const deleteUser: MutationFunction<any, Product> = async ({
-    id,
-  }: Product) => {
-    return makeRequest(BASE_URL + "users/" + id, "DELETE");
+  const queryClient = useQueryClient();
+  const authToken = useStore((state) => state.authToken);
+  const deleteUser: MutationFunction<any, Product> = async (id) => {
+    console.log("USER ID: ", id);
+    return makeDeleteRequest(BASE_URL + "users/" + id, authToken);
   };
 
   const mutation = useMutation({
     mutationFn: deleteUser,
-    onSuccess: () => {},
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY],
+      });
+    },
   });
 
   return mutation;

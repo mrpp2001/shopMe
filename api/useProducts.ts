@@ -6,7 +6,7 @@ import {
   MutationFunction,
 } from "@tanstack/react-query";
 import { BASE_URL, makeRequest } from "./baseURL";
-import { useStore } from "@/store/authToken";
+import { useStore } from "@/store/store";
 
 const PRODUCT_LIST_QUERY_KEY = "products";
 
