@@ -5,13 +5,6 @@ import { useAdmin, useUser } from "@/store/store";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { View, StyleSheet, Button, Text } from "react-native";
-import Toast from "react-native-toast-message";
-
-// johnd
-// m38rmF$
-
-// david_r
-// 3478*#54
 
 type LoginData = {
   username: string;

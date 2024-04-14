@@ -57,7 +57,6 @@ export const UpdateForm = ({ currentUser }: any) => {
 
   const onSubmit = (data: FormData) => {
     const id = currentUser?.id;
-    console.log("ID: ", id);
 
     updateUser(
       { id: id, data: { ...currentUser, ...data } },

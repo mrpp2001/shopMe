@@ -1,7 +1,11 @@
 import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-export default function SmallCart({ isSmallCartVisible, children, onClose }) {
+export default function SmallCart({
+  isSmallCartVisible,
+  children,
+  onClose,
+}: any) {
   return (
     <View
       style={{

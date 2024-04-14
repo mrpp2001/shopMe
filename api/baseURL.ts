@@ -16,8 +16,6 @@ export const makeRequest = async (
       body: method === "GET" ? null : JSON.stringify(data),
     });
 
-    console.log("USER DATA: ", data);
-
     if (!response.ok) throw new Error(`Error: ${response.status}`);
 
     const responseData = await response.json();

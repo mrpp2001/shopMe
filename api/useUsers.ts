@@ -55,7 +55,6 @@ export const useDeleteUser = () => {
   const queryClient = useQueryClient();
   const authToken = useStore((state) => state.authToken);
   const deleteUser: MutationFunction<any, Product> = async (id) => {
-    console.log("USER ID: ", id);
     return makeDeleteRequest(BASE_URL + "users/" + id, authToken);
   };
 

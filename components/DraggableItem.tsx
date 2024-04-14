@@ -1,13 +1,13 @@
 import { useCart } from "@/store/store";
-import React, { Children, useState } from "react";
-import { Text, TouchableOpacity, PanResponder, Animated } from "react-native";
+import React, { useState } from "react";
+import { PanResponder, Animated } from "react-native";
 
 export const DraggableItem = ({
   item,
   cartPosition,
   setIsSmallCartVisible,
   children,
-}) => {
+}: any) => {
   const { addItem } = useCart();
   const pan = useState(new Animated.ValueXY())[0];
   const initialPos = useState(new Animated.ValueXY())[0];
@@ -41,10 +41,7 @@ export const DraggableItem = ({
       })(e, gesture);
       // Check if the item is over the cart
       if (isDropArea(gesture)) {
-        console.log(`Item over cart: ${item.id}`);
         addItem(item);
-      } else {
-        console.log("Item not over cart");
       }
     },
     onPanResponderRelease: (e, gesture) => {
